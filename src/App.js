@@ -84,9 +84,9 @@ class App extends Component {
 
   handleCopyBtn = () => {
     navigator.clipboard.writeText("0x09e1d08381d429202d81e63dd9e3bd28e015285a");
-    // alert(
-    //   "Copied the Address: " + "0x4e169313319EaB6D986Dc351a20dF178902dCBAd"
-    // );
+    alert(
+      "Copied the Address: " + "0x4e169313319EaB6D986Dc351a20dF178902dCBAd"
+    );
   };
   handleMaxBtn = () => {
     let maxAmount = this.state.balance / 10e17;
