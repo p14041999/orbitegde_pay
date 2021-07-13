@@ -26,7 +26,7 @@ class App extends Component {
       this.web3 = new Web3(window.ethereum);
       this.contract = new this.web3.eth.Contract(
         abi,
-        "0x4e169313319EaB6D986Dc351a20dF178902dCBAd"
+        "0x09e1d08381d429202d81e63dd9e3bd28e015285a"
       );
     }
     window.ethaddress = "";
