@@ -187,12 +187,12 @@ class App extends Component {
               </button>
             )}
 
-            <button id="telegramBtn">
+            <a href="http://t.me/orbitedgefin" target="_blank"><button id="telegramBtn">
               <span>
                 <TelegramIcon style={{ paddingRight: 20 }} />
               </span>
-              Join our Telegram Group
-            </button>
+              Join our Telegram Channel
+            </button></a>
           </div>
         </div>
         <div id="middleline">
