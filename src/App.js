@@ -83,7 +83,7 @@ class App extends Component {
   }
 
   handleCopyBtn = () => {
-    navigator.clipboard.writeText("0x4e169313319EaB6D986Dc351a20dF178902dCBAd");
+    navigator.clipboard.writeText("0x09e1d08381d429202d81e63dd9e3bd28e015285a");
     // alert(
     //   "Copied the Address: " + "0x4e169313319EaB6D986Dc351a20dF178902dCBAd"
     // );
@@ -202,7 +202,7 @@ class App extends Component {
           <h2>Scan QRCODE</h2>
           <QRCode
             size={200}
-            value="0x4e169313319EaB6D986Dc351a20dF178902dCBAd"
+            value="0x09e1d08381d429202d81e63dd9e3bd28e015285a"
           />
           <div
             className="upper-input"
@@ -228,7 +228,7 @@ class App extends Component {
                   }
                 }}
               /> */}
-              <p>0x4e16931331.....02dCBAd</p>
+              <p>0x09e1d08381.....e3bd28e015285a</p>
             </div>
             <button className="desBtn" onClick={this.handleCopyBtn}>
               <FileCopyIcon style={{ paddingRight: 15, paddingLeft: 15 }} />
