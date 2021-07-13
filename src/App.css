@@ -4,11 +4,16 @@
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 }
 button:hover {
   cursor: pointer;
+}
+
+#middleline {
+  border-right: 2px solid gray;
+  height: 60%;
 }
 .card {
   background-color: white;
@@ -138,14 +143,64 @@ button:hover {
   border-radius: 50%;
 }
 
+.qrcode {
+  display: flex;
+  height: 90%;
+  background: white;
+  /* padding: 54px; */
+  width: 25%;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 20px;
+}
+
+.qrcode h2 {
+  margin-bottom: 76px;
+  margin-top: 40px;
+}
+.desBtn {
+  border: none;
+  background-color: white;
+  border-left: 1px solid black;
+  border-radius: 11px;
+  /* padding: 0px 20px; */
+  display: flex;
+  align-items: center;
+}
+#UP {
+  margin: 120px 0px;
+}
+
 @media only screen and (max-width: 900px) {
+  .app {
+    flex-direction: column;
+    background-color: white;
+  }
   .card {
     width: 100% !important;
     height: 92%;
+    margin-top: 600px;
+    padding: 38px;
   }
   .UpCont {
     /* display: flex; */
     margin: 21px 0px;
     position: relative;
+  }
+  #middleline {
+    /* display: none; */
+    border: none;
+    background-color: white;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #middleline h1 {
+    display: block;
+  }
+  .qrcode {
+    width: 100% !important;
+    border-radius: 0;
   }
 }

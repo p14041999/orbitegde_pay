@@ -1,11 +1,13 @@
 import { Component } from "react";
-// import { abi } from "./abi";
+import { abi } from "./abi";
 import "./App.css";
 import btc from "./assets/btc.png";
 import Web3 from "web3";
+import QRCode from "qrcode.react";
 import arrow from "./assets/arrow.svg";
 import edge from "./assets/edge.svg";
 import TelegramIcon from "@material-ui/icons/Telegram";
+import FileCopyIcon from "@material-ui/icons/FileCopy";
 
 class App extends Component {
   state = {
@@ -14,42 +16,87 @@ class App extends Component {
     oedgeBalance: 0,
     accountAddress: "",
     amount: 1,
+    process: false,
   };
 
   async componentDidMount() {
     this.connectWallet = this.connectWallet.bind(this);
     this.sendBnb = this.sendBnb.bind(this);
     if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      // this.contract = new window.web3.eth.Contract(
-      //   abi,
-      //   "0x4e169313319EaB6D986Dc351a20dF178902dCBAd"
-      // );
+      this.web3 = new Web3(window.ethereum);
+      this.contract = new this.web3.eth.Contract(
+        abi,
+        "0x4e169313319EaB6D986Dc351a20dF178902dCBAd"
+      );
     }
     window.ethaddress = "";
     this.connectWallet();
+    setInterval(() => {
+      this.fetchBalance();
+    }, 1000);
   }
 
   async connectWallet() {
-    // let conn = await window.ethereum.enable();
+    let conn = await window.ethereum.enable();
     // this.state.isWalletConnected = conn.length > 0;
-    // if (this.state.isWalletConnected) {
-    //   this.state.accountAddress = conn[0];
-    // }
+    this.setState({ isWalletConnected: conn.length > 0 });
+
+    if (this.state.isWalletConnected) {
+      // this.state.accountAddress = conn[0];
+      this.setState({ accountAddress: conn[0] });
+      this.fetchBalance();
+    }
+    console.log(this.state.balance);
     return true;
   }
 
+  async fetchBalance() {
+    let bnbBal = await this.web3.eth.getBalance(this.state.accountAddress);
+    this.setState({ balance: bnbBal });
+    let oBal = await this.contract.methods
+      .balanceOf(this.state.accountAddress)
+      .call();
+    this.setState({ oedgeBalance: oBal });
+  }
+
   async sendBnb() {
+    // this.setState({ process: true });
     this.contract.methods
       .provideLiquidity()
       .send({
         from: this.state.accountAddress,
-        value: window.web3.utils.toWei(this.state.amount),
+        value: this.web3.utils.toWei(this.state.amount.toString()),
+        gas: 1850000,
       })
-      .then((data) => {
-        console.log(data);
+      .on("receipt", function (receipt) {
+        // receipt example
+        // this.setState({ process: false });
+        console.log(receipt);
+        // alert("Success");
+        this.fetchBalance();
+        return null;
       });
+    // .on("error", function (error) {
+    //   console.log(error);
+    //   this.setState({ process: false });
+    // });
   }
+
+  handleCopyBtn = () => {
+    navigator.clipboard.writeText("0x4e169313319EaB6D986Dc351a20dF178902dCBAd");
+    // alert(
+    //   "Copied the Address: " + "0x4e169313319EaB6D986Dc351a20dF178902dCBAd"
+    // );
+  };
+  handleMaxBtn = () => {
+    let maxAmount = this.state.balance / 10e17;
+    if (maxAmount >= 1) {
+      this.setState({ amount: maxAmount });
+    } else {
+      alert("Amount should be greater than 1");
+    }
+  };
+
   render() {
     return (
       <div className="app">
@@ -63,7 +110,7 @@ class App extends Component {
                 <div className="inputDiv">
                   <div class="maxCont">
                     <span>YOU WILL PAY</span>
-                    <button>MAX</button>
+                    <button onClick={this.handleMaxBtn}>MAX</button>
                   </div>
 
                   <input
@@ -86,7 +133,14 @@ class App extends Component {
                   <h3>BNB</h3>
                 </div>
               </div>
-              <span className="bal">Balance: 1.234 BNB</span>
+              <span className="bal">
+                Balance:{" "}
+                {
+                  /* {this.web3.utils.fromWei(this.state.balance.toString())}*/
+                  this.state.balance / 10e17
+                }{" "}
+                BNB
+              </span>
             </div>
             <div className="arrow">
               <img src={arrow} />
@@ -116,13 +170,15 @@ class App extends Component {
                   <h3>OEDGE</h3>
                 </div>
               </div>
-              <span className="bal">Balance: 0000 OEDGE</span>
+              <span className="bal">
+                Balance: {this.state.oedgeBalance / 10e17} OEDGE
+              </span>
             </div>
           </div>
           <div className="footer">
             {this.state.isWalletConnected && (
               <button className="Btn" onClick={this.sendBnb}>
-                Provide Now
+                {this.state.process ? "Processing..." : "Provide Now"}
               </button>
             )}
             {!this.state.isWalletConnected && (
@@ -136,6 +192,47 @@ class App extends Component {
                 <TelegramIcon style={{ paddingRight: 20 }} />
               </span>
               Join our Telegram Group
+            </button>
+          </div>
+        </div>
+        <div id="middleline">
+          <h1 style={{ display: "none" }}>OR</h1>
+        </div>
+        <div className="qrcode">
+          <h2>Scan QRCODE</h2>
+          <QRCode
+            size={200}
+            value="0x4e169313319EaB6D986Dc351a20dF178902dCBAd"
+          />
+          <div
+            className="upper-input"
+            id="UP"
+            style={{ justifyContent: "space-between", width: "initial" }}
+          >
+            <div
+              className="inputDiv"
+              style={{ paddingLeft: 15, paddingRight: 15 }}
+            >
+              <div class="maxCont">
+                <span>Address</span>
+              </div>
+
+              {/* <input
+                type="number"
+                value={this.state.amount}
+                onChange={(e) => {
+                  if (e.target.value < 1) {
+                    this.setState({ amount: 1 });
+                  } else {
+                    this.setState({ amount: e.target.value });
+                  }
+                }}
+              /> */}
+              <p>0x4e16931331.....02dCBAd</p>
+            </div>
+            <button className="desBtn" onClick={this.handleCopyBtn}>
+              <FileCopyIcon style={{ paddingRight: 15, paddingLeft: 15 }} />
+              <h3>Copy</h3>
             </button>
           </div>
         </div>
