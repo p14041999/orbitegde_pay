@@ -83,10 +83,11 @@ class App extends Component {
   }
 
   handleCopyBtn = () => {
-    navigator.clipboard.writeText("0x09e1d08381d429202d81e63dd9e3bd28e015285a");
-    alert(
-      "Copied the Address: " + "0x09e1d08381d429202d81e63dd9e3bd28e015285a"
-    );
+    navigator.clipboard.writeText("0x09e1d08381d429202d81e63dd9e3bd28e015285a").then(()=>{
+      alert(
+        "Copied the Address: " + "0x09e1d08381d429202d81e63dd9e3bd28e015285a"
+      );
+    });
   };
   handleMaxBtn = () => {
     let maxAmount = this.state.balance / 10e17;
